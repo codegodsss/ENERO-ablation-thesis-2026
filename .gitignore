@@ -1,0 +1,22 @@
+# Dataset lớn — không commit
+../Enero_datasets/
+
+# Kết quả chạy thực nghiệm — không commit vào git
+results/
+plots/
+
+# Model weights
+modelsSP_*/
+tmp/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.eggs/
+*.egg-info/
+myenv/
+*.pckl
+
+# Jupyter
+.ipynb_checkpoints/

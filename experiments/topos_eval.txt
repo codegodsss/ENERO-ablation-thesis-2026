@@ -1,0 +1,11 @@
+# Danh sách topology dùng để evaluate trong tất cả experiments.
+# Mỗi tên tương ứng với folder NEW_{topo} trong Enero_datasets.
+# Dòng bắt đầu bằng # là comment — bị bỏ qua.
+#
+# Topology đã có dataset sẵn từ tác giả gốc:
+EliBackbone
+HurricaneElectric
+Janetbackbone
+#
+# Topology cần chạy convert_dataset.py trước:
+Garr199905
