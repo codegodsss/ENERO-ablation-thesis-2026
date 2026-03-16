@@ -1,3 +1,4 @@
+# This repository presents a personal research project based on the original ENERO paper, “ENERO: Efficient real-time WAN routing optimization with Deep Reinforcement Learning.” It is developed for academic and experimental purposes, with the goal of studying, reproducing, and extending selected ideas, methods, and evaluations from the original work. This repository is not the official implementation of the authors, but an independent research effort that uses the original paper as the main foundation for further analysis and exploration.
 # ENERO: Efficient real-time WAN routing optimization with Deep Reinforcement Learning
 
 #### Link to paper: [here](https://www.sciencedirect.com/science/article/pii/S1389128622002717)
