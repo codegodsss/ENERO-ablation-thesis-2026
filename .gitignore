@@ -38,3 +38,55 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Images (không upload ảnh)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.ico
+*.tiff
+
+# Documents (không upload PDF, Word, Excel)
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.txt
+
+# Media files (video, audio)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.mp3
+*.wav
+*.flac
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# OS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+
+# Output folders (to prevent large result uploads)
+Images/
+evalRes_*/
+Results/
+Output/
+tmp/
+.cache/

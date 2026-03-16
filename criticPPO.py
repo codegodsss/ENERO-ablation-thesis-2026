@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import tensorflow as tf
-from tensorflow import keras
-from keras import regularizers
+import tensorflow.keras as keras
+from tensorflow.keras import regularizers
 
 class myModel(tf.keras.Model):
     def __init__(self, hparams, hidden_init_critic, kernel_init_critic):

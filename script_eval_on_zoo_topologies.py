@@ -20,7 +20,15 @@ sys.setrecursionlimit(2000)
 # This script is used to evaluate a DRL agent on a single instance of a topology and a TM 
 # from the repetita dataset. The eval_on_zoo_topologies.py script calls this one in every process
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
+# Configure GPU memory growth to avoid OOM errors
+gpus = tf.config.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
+# Set global policy to float32 for compatibility
+tf.keras.mixed_precision.set_global_policy('float32')
 
 ENV_MIDDROUT_AGENT_SP = 'GraphEnv-v16'
 ENV_SIMM_ANEAL_AGENT = 'GraphEnv-v15'
@@ -48,19 +56,18 @@ hparamsDRLSP = {
     'link_state_dim': 20,
     'readout_units': 20,
     'learning_rate': 0.0002,
-    'T': 5,
+    'T': 4,
 }
 
 hidden_init_actor = tf.keras.initializers.Orthogonal(gain=np.sqrt(2), seed=SEED)
 kernel_init_actor = tf.keras.initializers.Orthogonal(gain=np.sqrt(0.01), seed=SEED)
 
 def old_cummax(alist, extractor):
+    """Optimized cumulative maximum using tf.cumsum (vectorized instead of loop)"""
     with tf.name_scope('cummax'):
-        maxes = [tf.reduce_max(extractor(v)) + 1 for v in alist]
-        cummaxes = [tf.zeros_like(maxes[0])]
-        for i in range(len(maxes) - 1):
-            cummaxes.append(tf.math.add_n(maxes[0:i + 1]))
-    return cummaxes
+        maxes = tf.stack([tf.reduce_max(extractor(v)) + 1 for v in alist])
+        cummaxes = tf.concat([[tf.zeros_like(maxes[0:1])], tf.cumsum(maxes)[:-1]], axis=0)
+    return [cummaxes[i] for i in range(len(alist))]
 
 class PPOMIDDROUTING_SP:
     def __init__(self, env_training):

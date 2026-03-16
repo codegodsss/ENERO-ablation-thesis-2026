@@ -29,7 +29,7 @@ def frange(x, y, jump):
     x += jump
 
 #folders = ["../Enero_datasets/dataset_sing_top/data/results_single_top/evalRes_NEW_Garr199905/EVALUATE/"]
-folders = ["../Enero_datasets/dataset_sing_top/evalRes_NEW_EliBackbone/EVALUATE/","../Enero_datasets/dataset_sing_top/evalRes_NEW_Janetbackbone/EVALUATE/","../Enero_datasets/dataset_sing_top/evalRes_NEW_HurricaneElectric/EVALUATE/"]
+folders = ["../Enero_datasets/dataset_sing_top/data/results_my_3_tops_unif_05-1/evalRes_NEW_EliBackbone/EVALUATE/","../Enero_datasets/dataset_sing_top/data/results_my_3_tops_unif_05-1/evalRes_NEW_HurricaneElectric/EVALUATE/","../Enero_datasets/dataset_sing_top/data/results_my_3_tops_unif_05-1/evalRes_NEW_Janetbackbone/EVALUATE/"]
 
 if __name__ == "__main__":
     # This script is to plot the Figures 5 and 6 from COMNET 2022 paper.

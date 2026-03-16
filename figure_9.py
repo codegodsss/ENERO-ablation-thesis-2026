@@ -35,10 +35,11 @@ def read_max_load_link(standard_out_file):
         return (pre_optim_max_load_link, post_optim_max_load_link)
 
 if __name__ == "__main__":
-    # This script is to obtain the figure 10 from Conext 2021 paper.
+    # This script is to obtain the figure 9 from ENERO paper (Zoo Topologies Performance).
+    # It evaluates the DRL agent on unseen TopologyZoo topologies to test generalization.
 
     # Before executing this file we must execute the eval_on_zoo_topologies.py file to evaluate the DRL model and store the results
-    # python figure_9.py -d SP_3top_15_B_NEW -p ../rwds-results-1-link_capacity-unif-05-1-zoo
+    # python figure_9.py -d Enero_3top_15_B_NEW -p ../Enero_datasets/topology_zoo/evalRes/
 
     parser = argparse.ArgumentParser(description='Parse files and create plots')
 

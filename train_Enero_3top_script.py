@@ -12,11 +12,19 @@ from collections import deque
 import argparse
 import pickle
 import heapq
-from keras import backend as K
+from tensorflow.keras import backend as K
 
 # Use BtAsiaPac, EliBackbone and Goodnet for training
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
+# Configure GPU memory growth to avoid OOM errors
+gpus = tf.config.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
+# Set global policy to float32 for compatibility
+tf.keras.mixed_precision.set_global_policy('float32')
 
 # In this experiment we learn how to pick the best action(middlepoint) by marking for each middlepoint
 # the action in the topology edges. Rewards are given per time-step.
@@ -80,19 +88,18 @@ kernel_init_critic = tf.keras.initializers.Orthogonal(gain=np.sqrt(1), seed=SEED
 
 hparams = {
     'l2': 0.0001,
-    'link_state_dim': 20,
-    'readout_units': 20,
+    'link_state_dim': 16,
+    'readout_units': 16,
     'learning_rate': 0.0002,
-    'T': 5,
+    'T': 4,
 }
 
 def old_cummax(alist, extractor):
+    """Optimized cumulative maximum using tf.cumsum (vectorized instead of loop)"""
     with tf.name_scope('cummax'):
-        maxes = [tf.reduce_max(extractor(v)) + 1 for v in alist]
-        cummaxes = [tf.zeros_like(maxes[0])]
-        for i in range(len(maxes) - 1):
-            cummaxes.append(tf.math.add_n(maxes[0:i + 1]))
-    return cummaxes
+        maxes = tf.stack([tf.reduce_max(extractor(v)) + 1 for v in alist])
+        cummaxes = tf.concat([[tf.zeros_like(maxes[0:1])], tf.cumsum(maxes)[:-1]], axis=0)
+    return [cummaxes[i] for i in range(len(alist))]
 
 def decayed_learning_rate(step):
     lr = hparams['learning_rate']*(DECAY_RATE ** (step / DECAY_STEPS))

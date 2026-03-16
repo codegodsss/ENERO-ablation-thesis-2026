@@ -13,14 +13,14 @@ if __name__ == "__main__":
     # This script is to obtain the figure 8 from COMNET 2022 paper. We plot the boxplots
     # of SAP, Enero and DEFO for each number of link failures.
 
-    # Before executing this file we must execute the eval_on_zoo_topologies.py script
-    # to evaluate the DRL agent over the link failure topologies. Also before that, we must create
-    # the link failure dataset (execute generate_link_failure_topologies.py). We must create a dataset
-    # for each topology where we want to try the link failure scenario and also execute the eval_on_zoo_topologies.py script
-    # on each of these topologies before I execute this script.
-    # python figure_8.py -d SP_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_HurricaneElectric
-    # python figure_8.py -d SP_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_Janetbackbone
-    # python figure_8.py -d SP_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_EliBackbone
+    # Before executing this file we must execute the eval_on_link_failure_topologies.py script
+    # to evaluate the DRL agent over the link failure topologies. The script will create results in:
+    # ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_{topology}/
+    # 
+    # Usage example:
+    # python figure_8.py -d Enero_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_EliBackbone/
+    # python figure_8.py -d Enero_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_HurricaneElectric/
+    # python figure_8.py -d Enero_3top_15_B_NEW -num_topologies 20 -f ../Enero_datasets/dataset_sing_top/LinkFailure/rwds-LinkFailure_Janetbackbone/
 
     parser = argparse.ArgumentParser(description='Parse files and create plots')
 
