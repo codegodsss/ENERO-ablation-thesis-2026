@@ -1,3 +1,5 @@
+#This repository is a personal research project based on the original ENERO paper and codebase. The main branch preserves the original source code as the baseline reference, while the variant/v1 branch contains my personal modifications, improvements, and experimental changes for research and evaluation purposes. In other words, main is used to keep the original implementation intact, and variant/v1 is where I develop and test my own ideas based on the original work. This repository is intended for academic study, reproduction, comparison, and further exploration rather than serving as an official implementation from the original authors.
+
 # ENERO: Efficient real-time WAN routing optimization with Deep Reinforcement Learning
 
 #### Link to paper: [here](https://www.sciencedirect.com/science/article/pii/S1389128622002717)
