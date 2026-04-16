@@ -9,6 +9,7 @@ venv/
 venv_gpu/
 env/
 .venv/
+myenv/
 
 # Python packaging
 *.egg-info/
@@ -89,4 +90,5 @@ evalRes_*/
 Results/
 Output/
 tmp/
+analysis_output/
 .cache/
