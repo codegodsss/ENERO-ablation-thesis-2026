@@ -16,7 +16,31 @@ Contact: <felician.paul.almasan@upc.edu>
 Wide Area Networks (WAN) are a key infrastructure in today’s society. During the last years, WANs have seen a considerable increase in network’s traffic and network applications, imposing new requirements on existing network technologies (e.g., low latency and high throughput). Consequently, Internet Service Providers (ISP) are under pressure to ensure the customer’s Quality of Service and fulfill Service Level Agreements. Network operators leverage Traffic Engineering (TE) techniques to efficiently manage the network’s resources. However, WAN’s traffic can drastically change during time and the connectivity can be affected due to external factors (e.g., link failures). Therefore, TE solutions must be able to adapt to dynamic scenarios in real-time.
 
 In this paper we propose Enero, an efficient real-time TE solution based on a two-stage optimization process. In the first one, Enero leverages Deep Reinforcement Learning (DRL) to optimize the routing configuration by generating a long-term TE strategy. To enable efficient operation over dynamic network scenarios (e.g., when link failures occur), we integrated a Graph Neural Network into the DRL agent. In the second stage, Enero uses a Local Search algorithm to improve DRL’s solution without adding computational overhead to the optimization process. The experimental results indicate that Enero is able to operate in real-world dynamic network topologies in 4.5 s on average for topologies up to 100 links.
+## Additional Contributions (Variant/V1 Branch)
 
+Beyond the original ENERO implementation, this branch includes extended analysis and improvements:
+
+### Analysis Tools
+- **`geant2001_3focused_v3/analysis_h1_link_level.py`** - Link-level utilization analysis examining per-link performance metrics, relief patterns, and betweenness-centrality correlations across different routing methods
+- **`geant2001_3focused_v3/analysis_h2_ospf_vs_enero.py`** - Comparative statistical analysis of OSPF vs ENERO routing with confidence intervals, significance testing, and improvement metrics
+- **`geant2001_3focused_v3/analysis_h4_failure_mode.py`** - Failure mode analysis for DRL vs Hillclimbing (HC), quadrant classification of performance modes, and identification of when HC rescue is needed
+
+### Utilities & Common Code
+- **`geant2001_common.py`** - Shared utilities and helper functions for analysis scripts (graph parsing, NaN handling, safe statistical operations)
+- **`geant2001_analysis_v3/`** - Additional analysis modules with extended topology evaluation capabilities
+
+### Evaluation Scripts
+- **`eval_speed_test_new_topos_fixed.py`** - Performance benchmarking on new topologies with timing analysis
+- **`parse_new_topologies_eval_results.py`** - Parser for evaluation results from new topology experiments
+- **`plot_new_topologies_results.py`** - Visualization tools for evaluation outcomes
+- **`script_eval_on_new_topologies_full.py`** - Full evaluation pipeline for new topology testing
+
+### Bug Fixes & Improvements
+- Fixed graph parser to correctly identify edges in topology files (changed "edge" detection to "Link_" prefix)
+- Added robust NaN/infinity handling in utilization arrays to prevent matplotlib warnings
+- Implemented variance guards before polyfit operations to handle nearly-constant data
+- Enhanced legend handling in multi-axis plots to prevent "No handles with labels" warnings
+- Improved error handling and data validation across analysis workflows
 ## Instructions to set up the Environment (It is recommended to use Linux)
 This paper implements the PPO algorithm to train a DRL agent that learns to route src-dst traffic demands using middelpoint routing. 
 
@@ -45,6 +69,103 @@ The source code already provides the data, the results and the trained model use
 ![image](https://user-images.githubusercontent.com/87467979/215685300-de8c071d-c8f7-4ffa-be6a-c642f04a7d76.png)
 
 2. Then, enter in the unziped "Enero_datasets" directory and unzip everything.
+
+## Extended Analysis: Geant2001-Focused Evaluation
+
+### Dataset Setup for Analysis Scripts
+
+The analysis scripts require pre-computed evaluation results. After downloading and setting up the `Enero_datasets` folder as described above, the following directory structure should exist:
+
+```
+~/ENERO-Thesis/Enero_datasets/
+├── dataset_sing_top/
+│   └── data/results_single_top/
+│       ├── Geant2001/
+│       │   ├── Geant2001.graph          # Network topology
+│       │   └── TM/                      # Traffic matrices (TM_0 to TM_49)
+│       ├── evalRes_Geant2001/
+│       │   ├── Enero_3top_15_B_NEW/Geant2001/    # DRL evaluation results
+│       │   └── SP_3top_15_B_NEW/Geant2001/       # Shortest path results
+└── rwds-results-1-link_capacity-unif-05-1-zoo/
+    └── SP_3top_15_B_NEW/Geant2001/    # Alternative SP results (fallback path)
+```
+
+**Key Files Needed:**
+- `Geant2001.graph` - Network topology file with 27 nodes, 38 edges
+- `Geant2001.0.demands` through `Geant2001.49.demands` - 50 traffic matrix files
+- Pickle files (`*.pckl`) in `evalRes_Geant2001/` directories - Pre-computed routing and utilization data
+
+### Running the Analysis Suite
+
+The analysis is organized in two folders with specific execution order:
+
+#### **Step 1: Prerequisite Analysis** (`geant2001_analysis_v3/`)
+
+These scripts extract basic inference metrics and prepare data for hypothesis testing:
+
+```bash
+cd ENERO-ablation-thesis-2026
+python3 geant2001_analysis_v3/geant2001_analysis_v3.py       # Generates inference_results.csv
+python3 geant2001_analysis_v3/geant2001_plots_v3.py          # Creates preliminary visualizations
+python3 geant2001_analysis_v3/geant2001_deep_analysis_v3.py  # Generates deep_analysis.csv & convergence.csv
+```
+
+**Outputs (saved to `analysis_output/`):**
+- `geant2001_inference_results.csv` - Core metrics (delays, costs, convergence)
+- `geant2001_deep_analysis.csv` - Feature-level analysis data
+- `geant2001_convergence.csv` - Training convergence statistics
+
+#### **Step 2: Main Analysis** (`geant2001_3focused_v3/`)
+
+These three scripts perform comparative analysis on the prerequisite outputs:
+
+```bash
+# Analysis A: Link-level utilization (per-link performance metrics)
+python3 geant2001_3focused_v3/analysis_h1_link_level.py
+# Outputs: fig_h1a.pdf/png (heatmap), fig_h1b.pdf/png (scatter), fig_h1c.pdf/png (top-10),
+#          fig_h1d.pdf/png (regression), fig_h1e.pdf/png (bottleneck identification)
+#          geant2001_link_utilization.csv
+
+# Analysis B: OSPF vs ENERO comparison (statistical significance testing)
+python3 geant2001_3focused_v3/analysis_h2_ospf_vs_enero.py
+# Outputs: fig_h2a.pdf/png (violin plot), fig_h2b.pdf/png (confidence intervals),
+#          fig_h2c.pdf/png (CDF), fig_h2d.pdf/png (quality vs time trade-off),
+#          fig_h2e.pdf/png (scatter correlation), ospf_vs_enero_stats.csv
+
+# Analysis C: Failure mode classification (DRL rescue scenarios)
+python3 geant2001_3focused_v3/analysis_h4_failure_mode.py
+# Outputs: fig_h4a.pdf/png (quadrant classification), fig_h4b.pdf/png (feature importance),
+#          fig_h4c.pdf/png (convergence analysis), fig_h4d.pdf/png (contribution heatmap),
+#          fig_h4e.pdf/png (case study), failure_mode_classification.csv
+```
+
+**Total Output:** 30 figure files (15 figures × PDF+PNG) + 3 CSV data files
+
+### What Each Analysis Script Does
+
+| Script | Focus | Key Metrics | Output |
+|--------|-------|-------------|--------|
+| **H1** | Per-link utilization | Betweenness-centrality correlation, relief patterns | Heatmaps, scatter plots, link rankings |
+| **H2** | Routing method comparison | Mean delay, cost differences, significance tests | Violin plots, confidence intervals, CDF |
+| **H4** | When DRL fails | Quadrant classification, feature importance | Failure mode matrix, feature contribution |
+
+### Prerequisites for Running Analysis
+
+Before running the scripts, ensure:
+
+1. **Dataset is ready** - Run the dataset preparation steps above
+2. **Directory structure exists** - Scripts auto-detect common paths; if paths differ, edit `geant2001_common.py` to add your paths
+3. **Python environment active** - `source myenv/bin/activate`
+4. **Required packages installed** - `pip install -r requirements.txt`
+
+### Troubleshooting Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| `FileNotFoundError: Thiếu đường dẫn bắt buộc` | Dataset paths not found. Verify `Enero_datasets` location matches `geant2001_common.py` |
+| `KeyError: 'tm_id'` | CSV headers don't match. Ensure prerequisite scripts (geant2001_analysis_v3) ran successfully |
+| Empty plots / all zeros | Check that pickle files exist and contain valid data. May need to re-run evaluation |
+| Memory issues with large datasets | Scripts handle up to 50 TMs; if timeout, reduce TM range in script source |
 
 ## Instructions to obtain the Figures from the paper
 
