@@ -12,35 +12,6 @@ Contact: <felician.paul.almasan@upc.edu>
 [![GitHub forks](https://img.shields.io/github/forks/BNN-UPC/ENERO?style=social&label=Fork)](https://github.com/BNN-UPC/ENERO)
 [![GitHub stars](https://img.shields.io/github/stars/BNN-UPC/ENERO?style=social&label=Star)](https://github.com/BNN-UPC/ENERO)
 
-## Abstract
-Wide Area Networks (WAN) are a key infrastructure in today’s society. During the last years, WANs have seen a considerable increase in network’s traffic and network applications, imposing new requirements on existing network technologies (e.g., low latency and high throughput). Consequently, Internet Service Providers (ISP) are under pressure to ensure the customer’s Quality of Service and fulfill Service Level Agreements. Network operators leverage Traffic Engineering (TE) techniques to efficiently manage the network’s resources. However, WAN’s traffic can drastically change during time and the connectivity can be affected due to external factors (e.g., link failures). Therefore, TE solutions must be able to adapt to dynamic scenarios in real-time.
-
-In this paper we propose Enero, an efficient real-time TE solution based on a two-stage optimization process. In the first one, Enero leverages Deep Reinforcement Learning (DRL) to optimize the routing configuration by generating a long-term TE strategy. To enable efficient operation over dynamic network scenarios (e.g., when link failures occur), we integrated a Graph Neural Network into the DRL agent. In the second stage, Enero uses a Local Search algorithm to improve DRL’s solution without adding computational overhead to the optimization process. The experimental results indicate that Enero is able to operate in real-world dynamic network topologies in 4.5 s on average for topologies up to 100 links.
-## Additional Contributions (Variant/V1 Branch)
-
-Beyond the original ENERO implementation, this branch includes extended analysis and improvements:
-
-### Analysis Tools
-- **`geant2001_3focused_v3/analysis_h1_link_level.py`** - Link-level utilization analysis examining per-link performance metrics, relief patterns, and betweenness-centrality correlations across different routing methods
-- **`geant2001_3focused_v3/analysis_h2_ospf_vs_enero.py`** - Comparative statistical analysis of OSPF vs ENERO routing with confidence intervals, significance testing, and improvement metrics
-- **`geant2001_3focused_v3/analysis_h4_failure_mode.py`** - Failure mode analysis for DRL vs Hillclimbing (HC), quadrant classification of performance modes, and identification of when HC rescue is needed
-
-### Utilities & Common Code
-- **`geant2001_common.py`** - Shared utilities and helper functions for analysis scripts (graph parsing, NaN handling, safe statistical operations)
-- **`geant2001_analysis_v3/`** - Additional analysis modules with extended topology evaluation capabilities
-
-### Evaluation Scripts
-- **`eval_speed_test_new_topos_fixed.py`** - Performance benchmarking on new topologies with timing analysis
-- **`parse_new_topologies_eval_results.py`** - Parser for evaluation results from new topology experiments
-- **`plot_new_topologies_results.py`** - Visualization tools for evaluation outcomes
-- **`script_eval_on_new_topologies_full.py`** - Full evaluation pipeline for new topology testing
-
-### Bug Fixes & Improvements
-- Fixed graph parser to correctly identify edges in topology files (changed "edge" detection to "Link_" prefix)
-- Added robust NaN/infinity handling in utilization arrays to prevent matplotlib warnings
-- Implemented variance guards before polyfit operations to handle nearly-constant data
-- Enhanced legend handling in multi-axis plots to prevent "No handles with labels" warnings
-- Improved error handling and data validation across analysis workflows
 ## Instructions to set up the Environment (It is recommended to use Linux)
 This paper implements the PPO algorithm to train a DRL agent that learns to route src-dst traffic demands using middelpoint routing. 
 
